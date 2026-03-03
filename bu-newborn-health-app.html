@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base target="_self">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bu - Newborn's Quiet Guardian</title>
+    <meta name="description" content="Minimalist newborn health app with AI insights, medical records, and pediatric-ready PDF reports.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'bu-pink': '#FFC0CB',
+                        'bu-pink-hover': '#FFB6C1',
+                        'bu-dark': '#333333'
+                    },
+                    fontFamily: {
+                        'montserrat': ['Montserrat', 'sans-serif']
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s ease-in-out infinite',
+                        'fade-in': 'fadeIn 0.8s ease-out forwards'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .phone-mockup {
+            background: linear-gradient(135deg, #FFC0CB 0%, #FFB6C1 100%);
+            border-radius: 40px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(255, 192, 203, 0.3);
+            position: relative;
+        }
+        .phone-screen {
+            background: white;
+            border-radius: 30px;
+            padding: 30px 20px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .app-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: #FFC0CB;
+            margin: 10px;
+        }
+        .chart-line {
+            height: 2px;
+            background: #FFC0CB;
+            margin: 5px 0;
+            border-radius: 1px;
+        }
+        .step-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #FFC0CB;
+            position: relative;
+            z-index: 2;
+        }
+        .step-line {
+            height: 2px;
+            background: #FFC0CB;
+            flex-grow: 1;
+            margin: 0 10px;
+            align-self: center;
+        }
+        @media (max-width: 768px) {
+            .step-line {
+                display: none;
+            }
+            .steps-container {
+                flex-direction: column;
+                gap: 40px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-white text-bu-dark">
+    <!-- Header/Navigation -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm shadow-sm">
+        <nav class="container mx-auto px-6 md:px-8 lg:px-12 py-4">
+            <div class="flex justify-between items-center">
+                <div class="text-2xl font-extrabold text-bu-pink" style="font-family: 'Montserrat', sans-serif; font-weight: 800;">Bu</div>
+                <ul id="nav-menu" class="hidden md:flex gap-8"></ul>
+                <button id="mobile-menu-btn" class="md:hidden text-bu-pink text-2xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
+                <ul id="mobile-nav-list" class="flex flex-col gap-4"></ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="relative overflow-hidden bg-gradient-to-br from-bu-pink to-pink-200 py-16 md:py-24">
+            <div class="container mx-auto px-6 md:px-8 lg:px-12">
+                <div class="flex flex-col lg:flex-row items-center justify-between gap-12">
+                    <div class="text-center lg:text-left lg:w-1/2 lg:pl-10 xl:pl-16 animate-fade-in">
+                        <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 800;">Bu</h1>
+                        <p class="text-2xl md:text-3xl font-semibold text-white mb-6">Newborn's Quiet Guardian</p>
+                        <p class="text-lg md:text-xl text-white/90 mb-8 max-w-2xl">Medical records, AI insights, PDF reports. Everything you need to track your newborn's health in one minimalist app.</p>
+                        <a href="#features" class="inline-block bg-white text-bu-pink hover:bg-gray-50 font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">Get Bu</a>
+                    </div>
+                    <div class="lg:w-1/2 flex justify-center">
+                        <div class="phone-mockup animate-pulse-slow max-w-sm">
+                            <div class="phone-screen">
+                                <div class="flex flex-wrap justify-center mb-8">
+                                    <div class="app-icon"></div>
+                                    <div class="app-icon"></div>
+                                    <div class="app-icon"></div>
+                                    <div class="app-icon"></div>
+                                </div>
+                                <div class="w-full max-w-xs">
+                                    <div class="chart-line w-3/4"></div>
+                                    <div class="chart-line w-full"></div>
+                                    <div class="chart-line w-2/3"></div>
+                                    <div class="chart-line w-5/6"></div>
+                                    <div class="chart-line w-1/2"></div>
+                                </div>
+                                <div class="mt-8 text-center text-bu-pink font-medium">Daily Health Summary</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Preview Section -->
+        <section class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-wrap justify-center gap-8 -mt-20 md:-mt-32">
+                    <div class="bg-white rounded-3xl shadow-xl p-4 transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                        <img src="img-1.png" alt="Bu app screenshot showing sleep tracking interface" class="rounded-2xl w-64 h-auto" loading="lazy">
+                    </div>
+                    <div class="bg-white rounded-3xl shadow-xl p-4 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
+                        <img src="img-2.png" alt="Bu app screenshot showing feeding and vital statistics" class="rounded-2xl w-64 h-auto" loading="lazy">
+                    </div>
+                </div>
+                <p class="text-center mt-8 text-gray-600 italic">Sleep, feeds, vitals, AI Q&A.</p>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-16 md:py-24">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Everything in One Place</h2>
+                <div id="features-container" class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section id="how-it-works" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">How It Works</h2>
+                <div class="steps-container flex flex-col md:flex-row justify-between items-center max-w-4xl mx-auto">
+                    <div id="steps-container" class="w-full"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section id="testimonials" class="py-16 md:py-24">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">What Parents Say</h2>
+                <div id="testimonials-container" class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"></div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-16 bg-gradient-to-r from-bu-pink to-pink-200">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Start with Bu Today</h2>
+                <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto">Join thousands of parents who trust Bu for their newborn's health journey.</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="#" class="inline-flex items-center justify-center bg-black text-white hover:bg-gray-800 font-bold py-4 px-8 rounded-2xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        <i class="fab fa-apple text-2xl mr-3"></i>
+                        <div class="text-left">
+                            <div class="text-xs">Download on the</div>
+                            <div class="text-lg">App Store</div>
+                        </div>
+                    </a>
+                    <a href="#" class="inline-flex items-center justify-center bg-white text-black hover:bg-gray-100 font-bold py-4 px-8 rounded-2xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        <i class="fab fa-google-play text-2xl mr-3"></i>
+                        <div class="text-left">
+                            <div class="text-xs">Get it on</div>
+                            <div class="text-lg">Google Play</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-bu-dark text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="text-2xl font-extrabold text-bu-pink mb-2" style="font-family: 'Montserrat', sans-serif; font-weight: 800;">Bu</div>
+                    <p class="text-gray-400">© 2026 Bu. All rights reserved.</p>
+                </div>
+                <ul id="footer-links" class="flex gap-6"></ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Data Layer
+        const navigationItems = [
+            { "label": "Home", "href": "#home", "icon": "fas fa-home" },
+            { "label": "Features", "href": "#features", "icon": "fas fa-star" },
+            { "label": "How It Works", "href": "#how-it-works", "icon": "fas fa-play-circle" },
+            { "label": "Testimonials", "href": "#testimonials", "icon": "fas fa-comment" }
+        ];
+
+        const features = [
+            { 
+                "title": "Medical Hub", 
+                "description": "All data centralized in one secure place. Track sleep, feeds, diapers, temperature, and medications with ease.", 
+                "icon": "fas fa-clipboard-list",
+                "color": "text-bu-pink"
+            },
+            { 
+                "title": "AI Insights", 
+                "description": "Compare your baby's progress with global health benchmarks. Get personalized insights and predictions.", 
+                "icon": "fas fa-brain",
+                "color": "text-bu-pink"
+            },
+            { 
+                "title": "Doctor PDFs", 
+                "description": "Generate pediatric-ready reports for appointments. Export beautiful PDFs with all essential data.", 
+                "icon": "fas fa-file-pdf",
+                "color": "text-bu-pink"
+            }
+        ];
+
+        const steps = [
+            { 
+                "number": "1", 
+                "title": "Track", 
+                "description": "Log daily activities, feedings, sleep patterns, and health metrics with simple taps." 
+            },
+            { 
+                "number": "2", 
+                "title": "AI Analyze", 
+                "description": "Our AI analyzes patterns and compares with health benchmarks to provide insights." 
+            },
+            { 
+                "number": "3", 
+                "title": "Share PDF", 
+                "description": "Generate comprehensive reports to share with pediatricians during appointments." 
+            }
+        ];
+
+        const testimonials = [
+            { 
+                "quote": "Bu has been life-changing for our family. Tracking our newborn's health has never been easier.", 
+                "author": "Ana", 
+                "location": "New York"
+            },
+            { 
+                "quote": "The minimalist design keeps me so calm during those stressful newborn days. Everything is right where I need it.", 
+                "author": "Maria", 
+                "location": "London"
+            },
+            { 
+                "quote": "Our pediatrician loved the PDF reports from Bu. She said they were the most organized she's ever seen.", 
+                "author": "Sara", 
+                "location": "Toronto"
+            }
+        ];
+
+        const footerLinks = [
+            { "label": "Privacy Policy", "href": "#privacy" },
+            { "label": "Terms of Service", "href": "#terms" },
+            { "label": "Contact", "href": "#contact" }
+        ];
+
+        // Render Functions
+        function renderNavItems(items) {
+            return items.map(item => 
+                `<li><a href="${item.href}" class="text-gray-600 hover:text-bu-pink font-medium transition-colors duration-200 flex items-center gap-2"><i class="${item.icon}"></i> ${item.label}</a></li>`
+            ).join("");
+        }
+
+        function renderFeatures(items) {
+            return items.map(item => 
+                `<div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+                    <div class="${item.color} text-4xl mb-6"><i class="${item.icon}"></i></div>
+                    <h3 class="text-2xl font-bold mb-4">${item.title}</h3>
+                    <p class="text-gray-600">${item.description}</p>
+                </div>`
+            ).join("");
+        }
+
+        function renderSteps(items) {
+            let html = "";
+            items.forEach((item, index) => {
+                html += `
+                <div class="flex flex-col md:flex-row items-center text-center md:text-left">
+                    <div class="step-dot flex items-center justify-center text-white font-bold">${item.number}</div>
+                    <div class="step-line hidden md:block"></div>
+                    <div class="mt-4 md:mt-0 md:ml-6 max-w-xs">
+                        <h3 class="text-xl font-bold mb-2">${item.title}</h3>
+                        <p class="text-gray-600">${item.description}</p>
+                    </div>
+                </div>`;
+            });
+            return html;
+        }
+
+        function renderTestimonials(items) {
+            return items.map(item => 
+                `<div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+                    <div class="text-bu-pink text-3xl mb-4">"</div>
+                    <p class="text-gray-700 text-lg italic mb-6">${item.quote}</p>
+                    <div class="font-bold text-lg">${item.author}</div>
+                    <div class="text-gray-500">${item.location}</div>
+                </div>`
+            ).join("");
+        }
+
+        function renderFooterLinks(items) {
+            return items.map(item => 
+                `<li><a href="${item.href}" class="text-gray-400 hover:text-bu-pink transition-colors duration-200">${item.label}</a></li>`
+            ).join("");
+        }
+
+        // DOM Initialization
+        document.addEventListener("DOMContentLoaded", function() {
+            // Navigation
+            document.getElementById("nav-menu").innerHTML = renderNavItems(navigationItems);
+            document.getElementById("mobile-nav-list").innerHTML = renderNavItems(navigationItems);
+            
+            // Features
+            document.getElementById("features-container").innerHTML = renderFeatures(features);
+            
+            // Steps
+            document.getElementById("steps-container").innerHTML = renderSteps(steps);
+            
+            // Testimonials
+            document.getElementById("testimonials-container").innerHTML = renderTestimonials(testimonials);
+            
+            // Footer
+            document.getElementById("footer-links").innerHTML = renderFooterLinks(footerLinks);
+            
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+            const mobileMenu = document.getElementById("mobile-menu");
+            
+            mobileMenuBtn.addEventListener("click", function() {
+                mobileMenu.classList.toggle("hidden");
+                const icon = mobileMenuBtn.querySelector("i");
+                if (mobileMenu.classList.contains("hidden")) {
+                    icon.className = "fas fa-bars";
+                } else {
+                    icon.className = "fas fa-times";
+                }
+            });
+            
+            // Smooth scrolling for anchor links
+            document.addEventListener("click", function(event) {
+                const link = event.target.closest("a[href^='#']");
+                if (!link) return;
+                
+                const href = link.getAttribute("href");
+                if (href === "#") return;
+                
+                event.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    // Close mobile menu if open
+                    mobileMenu.classList.add("hidden");
+                    mobileMenuBtn.querySelector("i").className = "fas fa-bars";
+                    
+                    // Scroll to target
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: "smooth"
+                    });
+                }
+            });
+            
+            // Add active class to current section in navigation
+            function updateActiveNav() {
+                const sections = document.querySelectorAll("section[id]");
+                const navLinks = document.querySelectorAll("nav a[href^='#']");
+                
+                let current = "";
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (scrollY >= sectionTop - 100) {
+                        current = section.getAttribute("id");
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove("text-bu-pink");
+                    link.classList.add("text-gray-600");
+                    if (link.getAttribute("href") === `#${current}`) {
+                        link.classList.remove("text-gray-600");
+                        link.classList.add("text-bu-pink");
+                    }
+                });
+            }
+            
+            window.addEventListener("scroll", updateActiveNav);
+            updateActiveNav(); // Initial call
+        });
+    </script>
+</body>
+</html>
